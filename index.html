@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PremiumDrive Insurance | Advanced Estimator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a1f29;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --gradient-start: #0f2027;
+            --gradient-mid: #203a43;
+            --gradient-end: #2c5364;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+            --glow: 0 0 10px rgba(231, 76, 60, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(231, 76, 60, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 70%, rgba(52, 152, 219, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(39, 174, 96, 0.1) 0%, transparent 30%);
+            z-index: -1;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            box-shadow: var(--glow);
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: var(--light);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, #2980b9 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .calculator-container {
+            background: rgba(26, 31, 41, 0.8);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(231,76,60,0.05)"/></svg>');
+            background-size: 100% 100%;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(44, 62, 80, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            color: var(--light);
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+            outline: none;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            background: rgba(52, 152, 219, 0.3);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: var(--transition);
+            border: 2px solid var(--light);
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: var(--accent);
+        }
+        
+        .result-box {
+            background: rgba(39, 174, 96, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            border-left: 5px solid var(--success);
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success);
+            margin: 1rem 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .chart-wrapper {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(26, 31, 41, 0.7);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+        
+        .price-breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .breakdown-item {
+            flex: 1;
+            min-width: 150px;
+            margin: 0.5rem;
+            padding: 1rem;
+            background: rgba(44, 62, 80, 0.6);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .breakdown-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tips-container {
+            background: rgba(26, 31, 41, 0.8);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem auto;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .tip-card {
+            background: rgba(44, 62, 80, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+        
+        .tip-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table th {
+            background: rgba(231, 76, 60, 0.3);
+            color: var(--light);
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: rgba(44, 62, 80, 0.3);
+        }
+        
+        .comparison-table tr:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        footer {
+            background: rgba(26, 31, 41, 0.8);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-radius: 12px;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            color: #cbd5e1;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .savings-calculator {
+            background: linear-gradient(135deg, rgba(255, 248, 225, 0.1) 0%, rgba(255, 236, 179, 0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 5px solid var(--warning);
+        }
+        
+        .provider-logos {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            gap: 1rem;
+        }
+        
+        .provider-logo {
+            width: 100px;
+            height: 60px;
+            background: rgba(44, 62, 80, 0.6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--light);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .coverage-visual {
+            height: 30px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--warning) 50%, var(--success) 100%);
+            border-radius: 15px;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .coverage-marker {
+            position: absolute;
+            top: -5px;
+            width: 40px;
+            height: 40px;
+            background: var(--dark);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: var(--shadow);
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                display: flex;
+                gap: 1rem;
+            }
+            
+            .form-row .form-group {
+                flex: 1;
+            }
+            
+            .tip-cards {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .tip-card {
+                margin-bottom: 0;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .tip-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-car"></i> PremiumDrive Insurance Estimator</h1>
+            <p>Find the perfect coverage at the best price with our advanced estimation tool</p>
+        </header>
+        
+        <section class="calculator-container">
+            <h2>Smart Insurance Estimation</h2>
+            <p>Complete the form below to get a personalized insurance estimate with money-saving recommendations.</p>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="basic">Basic Info</div>
+                <div class="tab" data-tab="vehicle">Vehicle Details</div>
+                <div class="tab" data-tab="coverage">Coverage Options</div>
+            </div>
+            
+            <form id="insurance-form">
+                <div class="tab-content active" id="basic-tab">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age"><i class="fas fa-user"></i> Your Age</label>
+                            <input type="number" id="age" min="18" max="85" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="driving-experience"><i class="fas fa-road"></i> Driving Experience (Years)</label>
+                            <input type="number" id="driving-experience" min="0" max="67" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <select id="location" required>
+                                <option value="rural">Rural Area</option>
+                                <option value="suburban" selected>Suburban Area</option>
+                                <option value="urban">Urban Area</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="credit-score"><i class="fas fa-credit-card"></i> Credit Score</label>
+                            <select id="credit-score" required>
+                                <option value="excellent">Excellent (720+)</option>
+                                <option value="good">Good (680-719)</option>
+                                <option value="fair">Fair (620-679)</option>
+                                <option value="poor">Poor (Below 620)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="driving-record"><i class="fas fa-clipboard-list"></i> Driving Record</label>
+                        <select id="driving-record" required>
+                            <option value="clean">Clean Record (No violations)</option>
+                            <option value="minor">Minor Violations (Speeding tickets)</option>
+                            <option value="major">Major Violations (Accidents, DUI)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn next-tab" data-next="vehicle">Next: Vehicle Details <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <div class="tab-content" id="vehicle-tab">
+                    <div class="form-group">
+                        <label for="car-type"><i class="fas fa-car"></i> Car Make & Model</label>
+                        <select id="car-type" required>
+                            <option value="">Select your vehicle</option>
+                            <option value="economy">Economy Car (e.g., Honda Civic, Toyota Corolla)</option>
+                            <option value="sedan">Mid-size Sedan (e.g., Toyota Camry, Honda Accord)</option>
+                            <option value="suv">SUV (e.g., Ford Explorer, Toyota RAV4)</option>
+                            <option value="luxury">Luxury Vehicle (e.g., BMW, Mercedes, Audi)</option>
+                            <option value="sports">Sports Car (e.g., Mustang, Corvette, Porsche)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="car-year"><i class="fas fa-calendar-alt"></i> Car Year</label>
+                            <select id="car-year" required>
+                                <option value="">Select year</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014 or older</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="annual-mileage"><i class="fas fa-tachometer-alt"></i> Annual Mileage</label>
+                            <div class="slider-container">
+                                <input type="range" id="annual-mileage" class="slider" min="2000" max="30000" step="1000" value="12000">
+                                <span id="mileage-value">12,000 miles</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <button type="button" class="btn btn-outline prev-tab" data-prev="basic"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn next-tab" data-next="coverage">Next: Coverage Options <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="coverage-tab">
+                    <div class="form-group">
+                        <label for="coverage-type"><i class="fas fa-shield-alt"></i> Coverage Type</label>
+                        <select id="coverage-type" required>
+                            <option value="minimum">Minimum Liability (State Minimum)</option>
+                            <option value="standard" selected>Standard Coverage</option>
+                            <option value="premium">Premium Coverage (Full Protection)</option>
+                        </select>
+                        
+                        <div class="coverage-visual">
+                            <div class="coverage-marker" id="coverage-marker" style="left: 50%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Minimum</span>
+                            <span>Standard</span>
+                            <span>Premium</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Additional Options</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="roadside" style="width: auto; margin-right: 0.5rem;"> Roadside Assistance
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="rental" style="width: auto; margin-right: 0.5rem;"> Rental Car Coverage
+                            </label>
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="gap" style="width: auto; margin-right: 0.5rem;"> GAP Insurance
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <button type="button" class="btn btn-outline prev-tab" data-prev="vehicle"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="submit" class="btn" id="calculate-btn">Calculate Premium <i class="fas fa-calculator"></i></button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="result-box" id="result">
+                <h3>Your Personalized Insurance Estimate</h3>
+                <div class="price" id="premium-amount">$0</div>
+                <p>Monthly premium based on your information</p>
+                
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <canvas id="premiumPieChart"></canvas>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="coverageBarChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="price-breakdown">
+                    <div class="breakdown-item">
+                        <i class="fas fa-car-crash"></i>
+                        <h4>Collision</h4>
+                        <p id="collision-cost">$0</p>
+                    </div>
+                    <div class="breakdown-item">
+                        <i class="fas fa-user-injured"></i>
+                        <h4>Liability</h4>
+                        <p id="liability-cost">$0</p>
+                    </div>
+                    <div class="breakdown-item">
+                        <i class="fas fa-bolt"></i>
+                        <h4>Comprehensive</h4>
+                        <p id="comprehensive-cost">$0</p>
+                    </div>
+                </div>
+                
+                <div class="savings-calculator">
+                    <h4><i class="fas fa-lightbulb"></i> Potential Savings</h4>
+                    <p>Based on your profile, you could save up to <strong id="savings-amount">$0</strong> per year by:</p>
+                    <ul>
+                        <li>Increasing your deductible</li>
+                        <li>Bundling with home insurance</li>
+                        <li>Taking a defensive driving course</li>
+                    </ul>
+                </div>
+                
+                <button class="btn" id="reset-btn">Start Over <i class="fas fa-redo"></i></button>
+            </div>
+        </section>
+        
+        <section class="tips-container">
+            <h2><i class="fas fa-money-bill-wave"></i> Advanced Strategies to Save on Car Insurance</h2>
+            <p>Maximize your savings with these proven strategies used by insurance experts.</p>
+            
+            <div class="tip-cards">
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div>
+                        <h3>Compare Multiple Quotes</h3>
+                        <p>Get quotes from at least 5 different providers. Rates can vary by hundreds of dollars for the same coverage.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-box"></i></div>
+                    <div>
+                        <h3>Bundle Policies</h3>
+                        <p>Combine auto with home or renters insurance for discounts of 10-25% on both policies.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-chart-line"></i></div>
+                    <div>
+                        <h3>Improve Credit Score</h3>
+                        <p>In most states, better credit can significantly reduce your premiums. Check your report for errors.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div>
+                        <h3>Defensive Driving Courses</h3>
+                        <p>Complete an approved course to qualify for discounts up to 10% with many insurers.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-money-check-alt"></i></div>
+                    <div>
+                        <h3>Higher Deductibles</h3>
+                        <p>Increasing your deductible from $200 to $500 could reduce your premium by 15-30%.</p>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-icon"><i class="fas fa-low-vision"></i></div>
+                    <div>
+                        <h3>Drop Unnecessary Coverage</h3>
+                        <p>For older cars, consider dropping collision if the premium exceeds 10% of the car's value.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Insurance Provider Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Average Annual Rate</th>
+                        <th>Discounts Offered</th>
+                        <th>Customer Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Geico</td>
+                        <td>$1,200</td>
+                        <td>Multi-policy, safe driver, military</td>
+                        <td>4.3/5</td>
+                    </tr>
+                    <tr>
+                        <td>Progressive</td>
+                        <td>$1,350</td>
+                        <td>Snapshot program, multi-vehicle</td>
+                        <td>4.1/5</td>
+                    </tr>
+                    <tr>
+                        <td>State Farm</td>
+                        <td>$1,400</td>
+                        <td>Drive Safe & Save, multi-line</td>
+                        <td>4.5/5</td>
+                    </tr>
+                    <tr>
+                        <td>Allstate</td>
+                        <td>$1,500</td>
+                        <td>Safe Driving, new car, easy pay</td>
+                        <td>4.0/5</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="provider-logos">
+                <div class="provider-logo">GEICO</div>
+                <div class="provider-logo">PROGRESSIVE</div>
+                <div class="provider-logo">STATE FARM</div>
+                <div class="provider-logo">ALLSTATE</div>
+                <div class="provider-logo">LIBERTY</div>
+                <div class="provider-logo">NATIONWIDE</div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Disclaimer: This calculator provides estimates only. Actual insurance premiums may vary based on additional factors not considered in this tool.</p>
+            <p>© 2023 PremiumDrive Insurance Estimator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const mileageSlider = document.getElementById('annual-mileage');
+            const mileageValue = document.getElementById('mileage-value');
+            const form = document.getElementById('insurance-form');
+            const resultBox = document.getElementById('result');
+            const premiumAmount = document.getElementById('premium-amount');
+            const resetBtn = document.getElementById('reset-btn');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const nextButtons = document.querySelectorAll('.next-tab');
+            const prevButtons = document.querySelectorAll('.prev-tab');
+            const coverageType = document.getElementById('coverage-type');
+            const coverageMarker = document.getElementById('coverage-marker');
+            const collisionCost = document.getElementById('collision-cost');
+            const liabilityCost = document.getElementById('liability-cost');
+            const comprehensiveCost = document.getElementById('comprehensive-cost');
+            const savingsAmount = document.getElementById('savings-amount');
+            
+            // Chart variables
+            let premiumPieChart, coverageBarChart;
+            
+            // Initialize coverage marker position
+            updateCoverageMarker();
+            
+            // Update mileage value when slider moves
+            mileageSlider.addEventListener('input', function() {
+                mileageValue.textContent = this.value.toLocaleString() + ' miles';
+            });
+            
+            // Tab functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Next button functionality
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nextTab = this.getAttribute('data-next');
+                    document.querySelector(`.tab[data-tab="${nextTab}"]`).click();
+                });
+            });
+            
+            // Previous button functionality
+            prevButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const prevTab = this.getAttribute('data-prev');
+                    document.querySelector(`.tab[data-tab="${prevTab}"]`).click();
+                });
+            });
+            
+            // Coverage type visual indicator
+            coverageType.addEventListener('change', updateCoverageMarker);
+            
+            function updateCoverageMarker() {
+                let position;
+                switch(coverageType.value) {
+                    case 'minimum':
+                        position = '10%';
+                        break;
+                    case 'standard':
+                        position = '50%';
+                        break;
+                    case 'premium':
+                        position = '90%';
+                        break;
+                }
+                coverageMarker.style.left = position;
+            }
+            
+            // Create charts
+            function createCharts(collision, liability, comprehensive, additional) {
+                // Destroy existing charts if they exist
+                if (premiumPieChart) {
+                    premiumPieChart.destroy();
+                }
+                if (coverageBarChart) {
+                    coverageBarChart.destroy();
+                }
+                
+                // Create premium breakdown pie chart
+                const pieCtx = document.getElementById('premiumPieChart').getContext('2d');
+                premiumPieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Collision', 'Liability', 'Comprehensive', 'Additional Coverage'],
+                        datasets: [{
+                            data: [collision, liability, comprehensive, additional],
+                            backgroundColor: [
+                                'rgba(231, 76, 60, 0.8)',
+                                'rgba(52, 152, 219, 0.8)',
+                                'rgba(39, 174, 96, 0.8)',
+                                'rgba(243, 156, 18, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgba(231, 76, 60, 1)',
+                                'rgba(52, 152, 219, 1)',
+                                'rgba(39, 174, 96, 1)',
+                                'rgba(243, 156, 18, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#ecf0f1'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Premium Breakdown',
+                                color: '#ecf0f1',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Create coverage comparison bar chart
+                const barCtx = document.getElementById('coverageBarChart').getContext('2d');
+                coverageBarChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Minimum', 'Standard', 'Premium'],
+                        datasets: [{
+                            label: 'Monthly Premium',
+                            data: [
+                                Math.round((collision + liability + comprehensive + additional) * 0.6),
+                                Math.round(collision + liability + comprehensive + additional),
+                                Math.round((collision + liability + comprehensive + additional) * 1.5)
+                            ],
+                            backgroundColor: [
+                                'rgba(231, 76, 60, 0.6)',
+                                'rgba(52, 152, 219, 0.6)',
+                                'rgba(39, 174, 96, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(231, 76, 60, 1)',
+                                'rgba(52, 152, 219, 1)',
+                                'rgba(39, 174, 96, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false,
+                                labels: {
+                                    color: '#ecf0f1'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Coverage Level Comparison',
+                                color: '#ecf0f1',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#ecf0f1'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#ecf0f1'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Calculate premium when form is submitted
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const age = parseInt(document.getElementById('age').value);
+                const experience = parseInt(document.getElementById('driving-experience').value);
+                const carType = document.getElementById('car-type').value;
+                const carYear = document.getElementById('car-year').value;
+                const coverage = document.getElementById('coverage-type').value;
+                const record = document.getElementById('driving-record').value;
+                const mileage = parseInt(document.getElementById('annual-mileage').value);
+                const location = document.getElementById('location').value;
+                const credit = document.getElementById('credit-score').value;
+                const roadside = document.getElementById('roadside').checked;
+                const rental = document.getElementById('rental').checked;
+                const gap = document.getElementById('gap').checked;
+                
+                // Base premium
+                let premium = 100;
+                let collision = 40;
+                let liability = 35;
+                let comprehensive = 25;
+                let additional = 0;
+                
+                // Age factor
+                if (age < 25) {
+                    premium *= 1.8;
+                    collision *= 1.8;
+                    liability *= 1.8;
+                    comprehensive *= 1.8;
+                } else if (age < 30) {
+                    premium *= 1.4;
+                    collision *= 1.4;
+                    liability *= 1.4;
+                    comprehensive *= 1.4;
+                } else if (age < 40) {
+                    premium *= 1.1;
+                    collision *= 1.1;
+                    liability *= 1.1;
+                    comprehensive *= 1.1;
+                } else if (age > 65) {
+                    premium *= 1.3;
+                    collision *= 1.3;
+                    liability *= 1.3;
+                    comprehensive *= 1.3;
+                }
+                
+                // Experience factor
+                if (experience < 3) {
+                    premium *= 1.5;
+                    collision *= 1.5;
+                    liability *= 1.5;
+                    comprehensive *= 1.5;
+                } else if (experience < 5) {
+                    premium *= 1.2;
+                    collision *= 1.2;
+                    liability *= 1.2;
+                    comprehensive *= 1.2;
+                }
+                
+                // Car type factor
+                if (carType === 'economy') {
+                    premium *= 1.0;
+                    collision *= 1.0;
+                    liability *= 1.0;
+                    comprehensive *= 1.0;
+                } else if (carType === 'sedan') {
+                    premium *= 1.2;
+                    collision *= 1.2;
+                    liability *= 1.2;
+                    comprehensive *= 1.2;
+                } else if (carType === 'suv') {
+                    premium *= 1.3;
+                    collision *= 1.3;
+                    liability *= 1.3;
+                    comprehensive *= 1.3;
+                } else if (carType === 'luxury') {
+                    premium *= 1.8;
+                    collision *= 1.8;
+                    liability *= 1.8;
+                    comprehensive *= 1.8;
+                } else if (carType === 'sports') {
+                    premium *= 2.0;
+                    collision *= 2.0;
+                    liability *= 2.0;
+                    comprehensive *= 2.0;
+                }
+                
+                // Car year factor
+                if (carYear === '2023') {
+                    premium *= 1.4;
+                    collision *= 1.4;
+                    comprehensive *= 1.4;
+                } else if (carYear === '2022') {
+                    premium *= 1.3;
+                    collision *= 1.3;
+                    comprehensive *= 1.3;
+                } else if (carYear === '2021') {
+                    premium *= 1.2;
+                    collision *= 1.2;
+                    comprehensive *= 1.2;
+                } else if (carYear === '2020') {
+                    premium *= 1.1;
+                    collision *= 1.1;
+                    comprehensive *= 1.1;
+                } else if (carYear === '2019') {
+                    premium *= 1.0;
+                    collision *= 1.0;
+                    comprehensive *= 1.0;
+                } else if (carYear === '2018') {
+                    premium *= 0.95;
+                    collision *= 0.95;
+                    comprehensive *= 0.95;
+                } else if (carYear === '2017') {
+                    premium *= 0.9;
+                    collision *= 0.9;
+                    comprehensive *= 0.9;
+                } else if (carYear === '2016') {
+                    premium *= 0.85;
+                    collision *= 0.85;
+                    comprehensive *= 0.85;
+                } else if (carYear === '2015') {
+                    premium *= 0.8;
+                    collision *= 0.8;
+                    comprehensive *= 0.8;
+                } else {
+                    premium *= 0.75;
+                    collision *= 0.75;
+                    comprehensive *= 0.75;
+                }
+                
+                // Coverage type factor
+                if (coverage === 'minimum') {
+                    premium *= 0.6;
+                    collision *= 0.5;
+                    comprehensive *= 0.5;
+                } else if (coverage === 'standard') {
+                    premium *= 1.0;
+                    collision *= 1.0;
+                    comprehensive *= 1.0;
+                } else if (coverage === 'premium') {
+                    premium *= 1.5;
+                    collision *= 1.5;
+                    comprehensive *= 1.5;
+                }
+                
+                // Driving record factor
+                if (record === 'clean') {
+                    premium *= 1.0;
+                } else if (record === 'minor') {
+                    premium *= 1.3;
+                } else if (record === 'major') {
+                    premium *= 2.0;
+                }
+                
+                // Mileage factor
+                if (mileage < 5000) {
+                    premium *= 0.8;
+                } else if (mileage < 10000) {
+                    premium *= 0.9;
+                } else if (mileage < 15000) {
+                    premium *= 1.0;
+                } else if (mileage < 20000) {
+                    premium *= 1.1;
+                } else {
+                    premium *= 1.3;
+                }
+                
+                // Location factor
+                if (location === 'rural') {
+                    premium *= 0.8;
+                } else if (location === 'suburban') {
+                    premium *= 1.0;
+                } else if (location === 'urban') {
+                    premium *= 1.4;
+                }
+                
+                // Credit score factor
+                if (credit === 'excellent') {
+                    premium *= 0.8;
+                } else if (credit === 'good') {
+                    premium *= 1.0;
+                } else if (credit === 'fair') {
+                    premium *= 1.2;
+                } else if (credit === 'poor') {
+                    premium *= 1.5;
+                }
+                
+                // Additional coverage
+                if (roadside) {
+                    premium += 5;
+                    additional += 5;
+                }
+                if (rental) {
+                    premium += 8;
+                    additional += 8;
+                }
+                if (gap) {
+                    premium += 7;
+                    additional += 7;
+                }
+                
+                // Create charts with the cost breakdown
+                createCharts(
+                    Math.round(collision),
+                    Math.round(liability),
+                    Math.round(comprehensive),
+                    Math.round(additional)
+                );
+                
+                // Display result
+                premiumAmount.textContent = '$' + Math.round(premium);
+                collisionCost.textContent = '$' + Math.round(collision);
+                liabilityCost.textContent = '$' + Math.round(liability);
+                comprehensiveCost.textContent = '$' + Math.round(comprehensive);
+                
+                // Calculate potential savings (15-25% of annual premium)
+                const annualPremium = Math.round(premium * 12);
+                const potentialSavings = Math.round(annualPremium * 0.2);
+                savingsAmount.textContent = '$' + potentialSavings;
+                
+                resultBox.style.display = 'block';
+                
+                // Scroll to result
+                resultBox.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                form.reset();
+                mileageValue.textContent = '12,000 miles';
+                mileageSlider.value = 12000;
+                resultBox.style.display = 'none';
+                document.querySelector('.tab[data-tab="basic"]').click();
+                updateCoverageMarker();
+                
+                // Destroy charts
+                if (premiumPieChart) {
+                    premiumPieChart.destroy();
+                    premiumPieChart = null;
+                }
+                if (coverageBarChart) {
+                    coverageBarChart.destroy();
+                    coverageBarChart = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
