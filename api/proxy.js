@@ -1,8 +1,7 @@
 export default async function handler(req, res) {
   const { phone } = req.query;
 
-  // keep your API key safe here (server-side only!)
-  const API_KEY = "Pkcka4f2BbdHh2FhzJtx";
+  const API_KEY = "Pkcka4f2BbdHh2FhzJtx"; // keep secret here!
 
   try {
     const response = await fetch(
